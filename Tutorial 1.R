@@ -2,7 +2,7 @@ library(tidyverse)
 library(ggplot2)
 #data input
 response <- read.table("response.txt", skip = 6, header = TRUE)
-# sumarrising
+# sumarising
 response %>% 
   group_by(genotype) %>% 
   summarise(m = mean(sens),
@@ -32,5 +32,14 @@ summary(mod)
 anova(mod)
 
 mod_2  <- update(mod, .~. -GSH:genotype)
+#removing sensitivity as isnt significant
 
 summary(mod_2)
+res <- anova(mod_2)
+
+res$Df[1],res$Df[3]
+#want the F-value, P-value and DoF
+#mean sqr is just variance f=Ms/residual (background variance) ie 57/2.875
+# p is prob of getting more than F with this degrees of freedom
+#there is a significant effect of GSH on the treatment (F=19.8285, p=0.0001324)
+# there is a significant effect of genotype on the treatment (F=7.1468,p=0.0032285)

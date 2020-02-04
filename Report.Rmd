@@ -1,0 +1,43 @@
+---
+title: "Response"
+author: "Anna Bennett"
+date: "04/02/2020"
+output:
+  html_document: default
+  word_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE,
+                      warning = FALSE,
+                      message = FALSE)
+```
+
+# Introduction
+
+write something here
+
+# Methods
+
+# Results
+overall model result - direction and magnitude (effect and slope)
+## R Markdown
+
+
+
+```{r cars}
+m <- mean(cars$dist)
+```
+
+The **mean** *distance* `r m` and it is big. $p = \chi{2} \frac{1}{2} \alpha$
+
+```{r }
+
+```
+GSH effects sensitivity (d.f. = `res$Df)
+
+```{r}
+
+```
+
+
