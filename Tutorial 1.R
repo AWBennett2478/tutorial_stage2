@@ -26,6 +26,7 @@ ggplot(data = response,
   ylim(0, 40) +
   geom_smooth(method = "lm", se =FALSE, fullrange = TRUE)
 
+
 mod <- lm(data = response, sens ~ GSH * genotype)
 summary(mod)
 
@@ -36,8 +37,9 @@ mod_2  <- update(mod, .~. -GSH:genotype)
 
 summary(mod_2)
 res <- anova(mod_2)
-
-res$Df[1],res$Df[3]
+res
+res$Df[1]
+res$Df[3]
 #want the F-value, P-value and DoF
 #mean sqr is just variance f=Ms/residual (background variance) ie 57/2.875
 # p is prob of getting more than F with this degrees of freedom

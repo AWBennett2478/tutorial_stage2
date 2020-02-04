@@ -12,32 +12,54 @@ knitr::opts_chunk$set(echo = FALSE,
                       warning = FALSE,
                       message = FALSE)
 ```
+```{r library}
+library(tidyverse)
+library(ggplot2)
+```
 
 # Introduction
 
-write something here
+Cytotoxic drugs are used as anti-cancer drugs. A patients sensitivity to the cytotoxic drugs may be due to their genotype. However, glutathione (GSH) concentration is thought to also have an impact on treatment sensitivity. A measure of treatment sensitivity and GSH concentration for patients that had one of three alleles (?A2?,?AA01?,?B34?) was done to see whether the patients genotype or GSH concentraions had an effect on their sensitivity to the anti-cancer cytotoxic drugs.
 
 # Methods
 
 # Results
+```{r dataset }
+response <- read.table("response.txt", skip = 6, header = TRUE)
+
+```
+
+```{r mod, include=FALSE}
+mod <- lm(data = response, sens ~ GSH * genotype)
+summary(mod)
+anova(mod)
+```
+```{r mod2, include=FALSE}
+mod_2  <- update(mod, .~. -GSH:genotype)
+#removing sensitivity as isnt significant
+summary(mod_2)
+res <- anova(mod_2)
+m <- res$Df[1]
+n <- res$Df[3]
+```
+
+```{r graph}
+ggplot(data = response,
+       aes(x = GSH, y = sens, col = genotype)) +
+  geom_point() +
+  xlim(2, 6) +
+  ylim(15, 40) +
+  geom_smooth(method = "lm", se =FALSE)+
+  xlab("GSH concentration")+
+  ylab("Sensitivity")
+```
+
+
+There is no significant affect of genotype on the concentration of GSH (F = 1.1778, p = 0.3244610, d.f. = 1, 27). GSH has a significant effect on sensitivity (p = 0.0001324, F = 19.8285, d.f. = `r res$Df[1]`,`r res$Df[3]`). By increasing GSH concentration the sensitivity to cytotoxic drugs increases with a magnitude of 1.9116. Genotype also is found to have a signficant effect on sensitivity (p = 0.003228500, F = 7.146775, d.f. = `r res$Df[2]`,`r res$Df[3]`).
 overall model result - direction and magnitude (effect and slope)
-## R Markdown
+## R Markdown ##
 
 
-
-```{r cars}
-m <- mean(cars$dist)
-```
-
-The **mean** *distance* `r m` and it is big. $p = \chi{2} \frac{1}{2} \alpha$
-
-```{r }
-
-```
-GSH effects sensitivity (d.f. = `res$Df)
-
-```{r}
-
-```
+The **mean** *distance* and it is big. $p = \chi{2} \frac{1}{2}$
 
 
