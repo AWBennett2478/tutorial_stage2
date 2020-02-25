@@ -4,7 +4,7 @@ author: "Anna Bennett"
 date: "04/02/2020"
 output:
   html_document: default
-  word_document: default
+bibliography: "ref.bib"
 ---
 
 ```{r setup, include=FALSE}
@@ -15,6 +15,7 @@ knitr::opts_chunk$set(echo = FALSE,
 ```{r library}
 library(tidyverse)
 library(ggplot2)
+library(viridis)
 ```
 
 # Introduction
@@ -22,7 +23,7 @@ library(ggplot2)
 Cytotoxic drugs are used as anti-cancer drugs. A patients sensitivity to the cytotoxic drugs may be due to their genotype. However, glutathione (GSH) concentration is thought to also have an impact on treatment sensitivity. A measure of treatment sensitivity and GSH concentration for patients that had one of three alleles (?A2?,?AA01?,?B34?) was done to see whether the patients genotype or GSH concentraions had an effect on their sensitivity to the anti-cancer cytotoxic drugs.
 
 # Methods
-
+the data were modelled using an ANOVA model in the R language [@R_base] with Rstudio
 # Results
 ```{r dataset }
 response <- read.table("response.txt", skip = 6, header = TRUE)
@@ -37,6 +38,7 @@ anova(mod)
 ```{r mod2, include=FALSE}
 mod_2  <- update(mod, .~. -GSH:genotype)
 #removing sensitivity as isnt significant
+
 summary(mod_2)
 res <- anova(mod_2)
 m <- res$Df[1]
@@ -44,21 +46,34 @@ n <- res$Df[3]
 ```
 
 ```{r graph}
-ggplot(data = response,
+Fig_1<-ggplot(data = response,
        aes(x = GSH, y = sens, col = genotype)) +
+  scale_color_manual(values = viridis(3), name = "Genotype")+
   geom_point() +
-  xlim(2, 6) +
-  ylim(15, 40) +
   geom_smooth(method = "lm", se =FALSE)+
   xlab("GSH concentration")+
-  ylab("Sensitivity")
+  ylab("Sensitivity") +
+  theme_classic()+
+  theme(legend.position = c(0.2, 0.3), 
+        axis.title = element_text(size = 12),
+        axis.text = element_text(size=10),
+        legend.text = element_text(size = 10),
+        legend.title = element_text(size=10, vjust = -2),
+        legend.key.size = unit(0.005, "cm"),
+        axis.line = element_line(size=1))+
+  scale_y_continuous(limits = c(0,35), expand = c(0,0))+
+  scale_x_continuous(limits = c(0,6), expand = c(0,0))
+# font in ggplot is given in mm but in word is given in points. 1 point = 0.35 mm
+ggsave("GSHvtreatment.tiff", plot = Fig_1, width = 6.68, units = "cm", height = 6.68, dpi = 300)
 ```
 
 
-There is no significant affect of genotype on the concentration of GSH (F = 1.1778, p = 0.3244610, d.f. = 1, 27). GSH has a significant effect on sensitivity (p = 0.0001324, F = 19.8285, d.f. = `r res$Df[1]`,`r res$Df[3]`). By increasing GSH concentration the sensitivity to cytotoxic drugs increases with a magnitude of 1.9116. Genotype also is found to have a signficant effect on sensitivity (p = 0.003228500, F = 7.146775, d.f. = `r res$Df[2]`,`r res$Df[3]`).
+There is no significant affect of genotype on the concentration of GSH (F = 1.1778, p = 0.3244610, d.f. = 1, 27). GSH has a significant effect on sensitivity (p = 0.0001324, F = 19.8285, d.f. = `r res$Df[1]` , `r res$Df[3]`). By increasing GSH concentration the sensitivity to cytotoxic drugs increases with a magnitude of 1.9116. Genotype also is found to have a signficant effect on sensitivity (p = 0.003228500, F = 7.146775, d.f. = `r res$Df[2]`,`r res$Df[3]`).
 overall model result - direction and magnitude (effect and slope)
-## R Markdown ##
 
+
+
+## R Markdown ##
 
 The **mean** *distance* and it is big. $p = \chi{2} \frac{1}{2}$
 
